@@ -5,9 +5,9 @@ server:
 
 aliyun:
   mns:
-   endpoint: http://1740201139106166.mns.cn-hangzhou.aliyuncs.com
-   access-key-id: LTAIlWEIM8b7Q27q
-   access-key-secret: otpEuurgnnwpYZqZc18InjfY2c7KA2
+   endpoint: xxx
+   access-key-id: xxx
+   access-key-secret: xxx
    config:
     id: abcdefg112233
    queue:
