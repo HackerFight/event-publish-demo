@@ -1,0 +1,16 @@
+server:
+  port: 8001
+
+
+
+aliyun:
+  mns:
+   endpoint: http://1740201139106166.mns.cn-hangzhou.aliyuncs.com
+   access-key-id: LTAIlWEIM8b7Q27q
+   access-key-secret: otpEuurgnnwpYZqZc18InjfY2c7KA2
+   config:
+    id: abcdefg112233
+   queue:
+     - fyh-mns-queue
+#     - fyh-mns-queue2
+#     - fyh-mns-queue3
