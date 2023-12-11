@@ -60,20 +60,24 @@ public class MnsMessagePublisher implements MessagePublisher,  ApplicationEventP
             return;
         }
 
-        queues.forEach(queue -> executorService.execute(() -> {
-            CloudQueue queueRef = this.mnsClient.getQueueRef(queue);
-            AtomicBoolean start = new AtomicBoolean(true);
-            while (start.get()) {
+        queues.forEach(queueName -> executorService.execute(() -> {
+            CloudQueue queue = mnsClient.getQueueRef(queueName);
+            boolean canProcess = true;
+            while (canProcess) {
                 try {
-                    Message message = queueRef.popMessage();
-                    if (null != message) {
-                        this.publisher.publishEvent(new MnsEvent(this, message, queue));
-                        // 处理完消息后，别忘了删除消息，否则它会在下次你调用PopMessage的时候仍然会出现在队列中
-                        //queueRef.deleteMessage(message.getReceiptHandle());
+                    Message message = queue.popMessage();
+                    if (message == null){
+                        log.warn("MNS队列：{} 没有可以消费的数据", queueName);
+                        continue;
                     }
+
+                    this.publisher.publishEvent(new MnsEvent(this, message, queueName));
+                    queue.deleteMessage(message.getReceiptHandle());
+
+                    log.info(">>>>>>> MNS队列消费成功, 并从队列中删除已消费的数据");
                 } catch (Exception e) {
-                    log.error("监听队列 [{}] 读取消息失败", queue, e);
-                    start.set(false);
+                    canProcess = false;
+                    log.error("MNS订阅队列 = [{}] 的数据发生错误", queueName, e);
                 }
             }
         }));
