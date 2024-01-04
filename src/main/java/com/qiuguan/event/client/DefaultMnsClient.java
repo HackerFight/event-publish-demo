@@ -36,6 +36,12 @@ public class DefaultMnsClient implements MnsClient, InitializingBean, Disposable
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        //如果nacos没有配置，mnsProperties对象也不会空，只是属性都是null, 其中boolean 默认是false
+        if (!this.mnsProperties.isEnable()) {
+            log.warn(">>>>>>>>>>>>>>>>>>>>>> mns client disabled !!!");
+            return;
+        }
+
         CloudAccount account = new CloudAccount(this.mnsProperties.getAccessKeyId(),
                 this.mnsProperties.getAccessKeySecret(), this.mnsProperties.getEndpoint());
         this.mnsClient = account.getMNSClient();
@@ -49,6 +55,8 @@ public class DefaultMnsClient implements MnsClient, InitializingBean, Disposable
 
     @Override
     public void destroy() throws Exception {
-        this.mnsClient.close();
+        if (this.mnsClient != null) {
+            this.mnsClient.close();
+        }
     }
 }

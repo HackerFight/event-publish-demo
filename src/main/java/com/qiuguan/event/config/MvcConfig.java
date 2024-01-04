@@ -1,11 +1,8 @@
 package com.qiuguan.event.config;
 
 import com.qiuguan.event.client.MnsClient;
-import com.qiuguan.event.client.MnsProperties;
 import com.qiuguan.event.event.MnsMessagePublisher;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -21,7 +18,7 @@ public class MvcConfig {
         return args -> publisher.publish(mnsClient, "fyh-mns-queue");
     }
 
-    @Bean
+    //@Bean
     public CommandLineRunner commandLineRunner(MnsMessagePublisher publisher) {
         return args -> publisher.publish();
     }

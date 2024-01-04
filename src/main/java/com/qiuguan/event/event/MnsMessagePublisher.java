@@ -1,12 +1,11 @@
 package com.qiuguan.event.event;
 
 import com.aliyun.mns.client.CloudQueue;
-import com.aliyun.mns.common.ClientException;
-import com.aliyun.mns.common.ServiceException;
 import com.aliyun.mns.model.Message;
 import com.qiuguan.event.client.MnsClient;
 import com.qiuguan.event.client.MnsProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
@@ -24,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Slf4j
 @Component
-public class MnsMessagePublisher implements MessagePublisher,  ApplicationEventPublisherAware {
+public class MnsMessagePublisher implements MessagePublisher,  ApplicationEventPublisherAware, CommandLineRunner {
 
     private ApplicationEventPublisher publisher;
 
@@ -81,5 +80,12 @@ public class MnsMessagePublisher implements MessagePublisher,  ApplicationEventP
                 }
             }
         }));
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        if (this.mnsProperties.isEnable()) {
+            this.publish();
+        }
     }
 }
